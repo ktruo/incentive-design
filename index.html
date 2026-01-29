@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kinetic Exchange — Incentive-Based Patient History Sharing</title>
+  <style>
+    :root {
+      --ink: #101418;
+      --muted: #5a6470;
+      --paper: #f4f2ed;
+      --chalk: #fffaf2;
+      --accent: #0c6b58;
+      --accent-2: #d9894e;
+      --line: #dfd8cd;
+      --panel: #ffffff;
+      --shadow: 0 16px 40px rgba(20, 24, 28, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Neue Haas Grotesk", "Suisse Int'l", "Space Grotesk", "Arial", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% -10%, #f5efe5, transparent),
+                  radial-gradient(1200px 800px at 90% -20%, #eaf1ee, transparent),
+                  var(--paper);
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+    header {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    h1 {
+      margin: 10px 0 14px;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.05;
+      font-weight: 700;
+    }
+    .lede {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 52ch;
+    }
+    .stats {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+    .stats strong { font-size: 28px; display: block; }
+    .stats span { color: var(--muted); font-size: 13px; }
+
+    section { margin-top: 56px; }
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .section-title h2 {
+      font-size: 24px;
+      margin: 0;
+    }
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .problem {
+      background: var(--chalk);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 20px;
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    .points {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .points .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 20px;
+    }
+    .points .card h3 { margin: 0 0 6px; }
+    .points .card p { margin: 0; color: var(--muted); }
+    .points-table {
+      margin-top: 14px;
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .points-table th, .points-table td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+    }
+    .points-table th { color: var(--muted); font-weight: 600; }
+
+    .artefacts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .doc-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 14px;
+    }
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .doc-header .clinic {
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .pill {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eef3f1;
+      color: var(--accent);
+      border: 1px solid #d7e4df;
+    }
+    .summary {
+      background: #f7f3ec;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      display: grid;
+      gap: 6px;
+    }
+    .summary strong { font-size: 14px; }
+
+    .form {
+      border: 1px dashed #cbbfb0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      display: grid;
+      gap: 6px;
+    }
+    .form span { color: var(--muted); }
+
+    .locked {
+      border: 1px solid #cfd6dc;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #f1f4f7;
+      color: var(--muted);
+      font-size: 13px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .points-meta {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .points-meta strong { color: var(--ink); }
+
+    .note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .callout {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      font-size: 14px;
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+    .callout p { margin: 8px 0 0; color: var(--muted); }
+
+    footer {
+      margin-top: 56px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
+      header, .points, .split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="kicker">Kinetic Exchange</div>
+        <h1>Patient history sharing without competition or judgement.</h1>
+        <p class="lede">A live product walkthrough showing how 1,800 independent physiotherapy clinics exchange patient history through silent incentives and anonymous records.</p>
+      </div>
+      <div class="stats">
+        <strong>1,800 clinics</strong>
+        <span>Independent practices across the Kinetic ecosystem</span>
+      </div>
+    </header>
+
+    <section>
+      <div class="section-title">
+        <h2>Problem</h2>
+        <p>Brief and direct.</p>
+      </div>
+      <div class="problem">
+        Patient history is fragmented across clinics. Most clinics want shared history, few want to share theirs — creating misaligned incentives that keep patients starting over.
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>How the Points System Works</h2>
+        <p>Share to earn, read to spend.</p>
+      </div>
+      <div class="points">
+        <div class="card">
+          <h3>Earn</h3>
+          <p>Share patient history → earn points</p>
+          <table class="points-table">
+            <thead>
+              <tr><th>Action</th><th>Points</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Share structured history</td><td>+12</td></tr>
+              <tr><td>Share detailed notes</td><td>+18</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>Spend</h3>
+          <p>Read patient history → spend points</p>
+          <table class="points-table">
+            <thead>
+              <tr><th>Access tier</th><th>Points</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Structured history</td><td>6</td></tr>
+              <tr><td>Detailed notes</td><td>18</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Example Shared Patient Documents</h2>
+        <p>Primary artefacts. Source-blind, anonymous, non-evaluative.</p>
+      </div>
+      <div class="artefacts">
+        <article class="doc-card">
+          <div class="doc-header">
+            <div class="clinic">Clinic A</div>
+            <div class="pill">Source-blind</div>
+          </div>
+          <div class="summary">
+            <strong>Document Summary</strong>
+            <div>Body region: Lower limb</div>
+            <div>Condition category: Post-surgical rehabilitation</div>
+            <div>Treatment category: Exercise-based therapy</div>
+            <div>Duration covered: 8+ weeks</div>
+            <div>Documentation depth: High (includes clinician notes)</div>
+          </div>
+          <div class="form">
+            <strong>Standardised Patient History</strong>
+            <div>Condition (taxonomy-based): ACL reconstruction rehab</div>
+            <div>Body region(s): Knee, hip</div>
+            <div>Treatment modalities (coded): THER-EX, MOB-MAN, EDU-PR</div>
+            <div>Progress markers: Strength +, ROM stable, gait improved</div>
+            <div>Imaging: Not recorded</div>
+            <div>Red flags: Not recorded</div>
+          </div>
+          <div class="locked">
+            <strong>Locked detailed notes</strong>
+            <div>Unlock detailed notes for 18 points</div>
+            <div>Clinical notes: Locked</div>
+            <div>Subjective observations: Locked</div>
+            <div>Comments: Locked</div>
+          </div>
+          <div class="points-meta">
+            <div><strong>Sharing this record earned 12 points</strong></div>
+            <div>Structured history: 6 points</div>
+            <div>Detailed notes: 18 points</div>
+          </div>
+          <div class="note">Point costs vary over time based on contribution quality.</div>
+        </article>
+
+        <article class="doc-card">
+          <div class="doc-header">
+            <div class="clinic">Clinic B</div>
+            <div class="pill">Source-blind</div>
+          </div>
+          <div class="summary">
+            <strong>Document Summary</strong>
+            <div>Body region: Spine</div>
+            <div>Condition category: Persistent pain</div>
+            <div>Treatment category: Manual therapy + education</div>
+            <div>Duration covered: 4–6 weeks</div>
+            <div>Documentation depth: Medium (structured form only)</div>
+          </div>
+          <div class="form">
+            <strong>Standardised Patient History</strong>
+            <div>Condition (taxonomy-based): Non-specific low back pain</div>
+            <div>Body region(s): Lumbar spine</div>
+            <div>Treatment modalities (coded): MOB-MAN, EDU-PR, EXE-CORE</div>
+            <div>Progress markers: Pain stable, function improving</div>
+            <div>Imaging: Not recorded</div>
+            <div>Red flags: Not recorded</div>
+          </div>
+          <div class="locked">
+            <strong>Locked detailed notes</strong>
+            <div>Unlock detailed notes for 18 points</div>
+            <div>Clinical notes: Locked</div>
+            <div>Subjective observations: Locked</div>
+            <div>Comments: Locked</div>
+          </div>
+          <div class="points-meta">
+            <div><strong>Sharing this record earned 12 points</strong></div>
+            <div>Structured history: 6 points</div>
+            <div>Detailed notes: 18 points</div>
+          </div>
+          <div class="note">Point costs vary over time based on contribution quality.</div>
+        </article>
+
+        <article class="doc-card">
+          <div class="doc-header">
+            <div class="clinic">Clinic C</div>
+            <div class="pill">Source-blind</div>
+          </div>
+          <div class="summary">
+            <strong>Document Summary</strong>
+            <div>Body region: Upper limb</div>
+            <div>Condition category: Overuse injury</div>
+            <div>Treatment category: Load management</div>
+            <div>Duration covered: 2–3 weeks</div>
+            <div>Documentation depth: Medium (includes progress markers)</div>
+          </div>
+          <div class="form">
+            <strong>Standardised Patient History</strong>
+            <div>Condition (taxonomy-based): Lateral elbow tendinopathy</div>
+            <div>Body region(s): Elbow, forearm</div>
+            <div>Treatment modalities (coded): LOAD-PROG, EDU-PR, EXE-ISO</div>
+            <div>Progress markers: Pain down, grip strength improving</div>
+            <div>Imaging: Not recorded</div>
+            <div>Red flags: Not recorded</div>
+          </div>
+          <div class="locked">
+            <strong>Locked detailed notes</strong>
+            <div>Unlock detailed notes for 18 points</div>
+            <div>Clinical notes: Locked</div>
+            <div>Subjective observations: Locked</div>
+            <div>Comments: Locked</div>
+          </div>
+          <div class="points-meta">
+            <div><strong>Sharing this record earned 12 points</strong></div>
+            <div>Structured history: 6 points</div>
+            <div>Detailed notes: 18 points</div>
+          </div>
+          <div class="note">Point costs vary over time based on contribution quality.</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Anonymity & Judgement Reduction</h2>
+        <p>Driven by the example artefacts above.</p>
+      </div>
+      <div class="split">
+        <div class="callout">
+          <strong>No clinic identity is exposed.</strong>
+          <p>Each document is source-blind. Clinics never see who authored a record, which keeps sharing neutral and low-risk.</p>
+        </div>
+        <div class="callout">
+          <strong>Summaries and forms reduce interpretation.</strong>
+          <p>AI summaries abstract documentation styles, and structured fields prevent judgement about how another clinic writes notes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Silent Quality Incentives</h2>
+        <p>Outcome only, not the system.</p>
+      </div>
+      <div class="split">
+        <div class="callout">
+          <strong>Thorough histories earn faster access.</strong>
+          <p>Clinics that consistently share detailed histories earn points faster and spend fewer points over time.</p>
+        </div>
+        <div class="callout">
+          <strong>Low-effort histories cost more.</strong>
+          <p>Clinics that share low-effort histories experience higher point costs, without any visible ratings or labels.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Product demo preview — designed for independent physiotherapy clinics in the Kinetic ecosystem.
+    </footer>
+  </div>
+</body>
+</html>
