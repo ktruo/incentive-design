@@ -10,78 +10,87 @@
     <main class="page">
       <header class="hero">
         <div class="hero__meta">Project 1 · Incentive Design Under Adversarial Conditions</div>
-        <h1>Make sharing patient history the selfish choice.</h1>
+        <h1>You are a clinic inside the network.</h1>
         <p class="hero__lead">
-          Kinetic serves 1,800 independent physiotherapy clinics. They want shared patient history, but
-          incentives are misaligned. This prototype shows a system where credits, pooling, and dispute
-          slashing push rational clinics to opt in and contribute.
+          You control one clinic. Decide when to read shared history or publish your own notes. Your
+          credits determine access. Publishing earns credits but carries a quality risk. The system
+          nudges selfish, rational behavior toward sharing.
         </p>
         <div class="hero__pill-row">
-          <div class="pill">Primary fear: patient switching</div>
-          <div class="pill">Secondary fear: peer judgment</div>
+          <div class="pill">Credits gate access</div>
+          <div class="pill">Redacted authorship</div>
+          <div class="pill">Quality disputes slash</div>
         </div>
       </header>
 
       <section class="panel">
-        <div class="panel__title">Simulation Controls</div>
+        <div class="panel__title">Your Clinic Controls</div>
         <div class="grid">
           <label>
-            Clinics
-            <input id="clinics" type="number" min="50" max="1000" value="200" />
-          </label>
-          <label>
-            Patients
-            <input id="patients" type="number" min="100" max="2000" value="400" />
-          </label>
-          <label>
-            Rounds
-            <input id="rounds" type="number" min="10" max="100" value="45" />
-          </label>
-          <label>
-            Starter credits
+            Your starting credits
             <input id="credits" type="number" min="5" max="30" value="10" />
           </label>
           <label>
-            Free rider %
+            Your share propensity %
+            <input id="shareProp" type="number" min="0" max="100" value="70" />
+          </label>
+          <label>
+            Your quality bias %
+            <input id="qualityBias" type="number" min="0" max="100" value="80" />
+          </label>
+          <label>
+            Competitor free riders %
             <input id="freeRider" type="number" min="0" max="60" value="18" />
           </label>
           <label>
-            Low quality %
+            Competitor low quality %
             <input id="lowQuality" type="number" min="0" max="40" value="10" />
+          </label>
+          <label>
+            Network size (clinics)
+            <input id="clinics" type="number" min="50" max="1000" value="200" />
+          </label>
+          <label>
+            Patients in network
+            <input id="patients" type="number" min="100" max="2000" value="400" />
+          </label>
+          <label>
+            Rounds to simulate
+            <input id="rounds" type="number" min="10" max="100" value="30" />
           </label>
         </div>
         <div class="actions">
-          <button id="runBtn">Run simulation</button>
+          <button id="runBtn">Run your clinic</button>
           <button id="resetBtn" class="ghost">Reset defaults</button>
         </div>
       </section>
 
       <section class="panel">
-        <div class="panel__title">Results</div>
+        <div class="panel__title">Your Outcome</div>
         <div class="results" id="results">
           <div class="metric">
-            <div class="metric__label">Opt-in rate</div>
+            <div class="metric__label">Your final credits</div>
+            <div class="metric__value" id="yourCredits">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Your reads</div>
+            <div class="metric__value" id="yourReads">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Your publishes</div>
+            <div class="metric__value" id="yourPublishes">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Your reputation</div>
+            <div class="metric__value" id="yourRep">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Network opt-in</div>
             <div class="metric__value" id="optIn">--</div>
           </div>
           <div class="metric">
-            <div class="metric__label">Total reads</div>
-            <div class="metric__value" id="reads">--</div>
-          </div>
-          <div class="metric">
-            <div class="metric__label">Total publishes</div>
-            <div class="metric__value" id="publishes">--</div>
-          </div>
-          <div class="metric">
-            <div class="metric__label">Avg credits</div>
-            <div class="metric__value" id="avgCredits">--</div>
-          </div>
-          <div class="metric">
-            <div class="metric__label">Avg reputation</div>
-            <div class="metric__value" id="avgRep">--</div>
-          </div>
-          <div class="metric">
-            <div class="metric__label">Remaining clinics</div>
-            <div class="metric__value" id="remaining">--</div>
+            <div class="metric__label">Network activity</div>
+            <div class="metric__value" id="networkActivity">--</div>
           </div>
         </div>
       </section>

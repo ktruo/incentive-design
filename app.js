@@ -1,10 +1,12 @@
 const defaults = {
   clinics: 200,
   patients: 400,
-  rounds: 45,
+  rounds: 30,
   credits: 10,
   freeRider: 18,
   lowQuality: 10,
+  shareProp: 70,
+  qualityBias: 80,
 };
 
 const el = (id) => document.getElementById(id);
@@ -16,15 +18,17 @@ const form = {
   credits: el("credits"),
   freeRider: el("freeRider"),
   lowQuality: el("lowQuality"),
+  shareProp: el("shareProp"),
+  qualityBias: el("qualityBias"),
 };
 
 const output = {
+  yourCredits: el("yourCredits"),
+  yourReads: el("yourReads"),
+  yourPublishes: el("yourPublishes"),
+  yourRep: el("yourRep"),
   optIn: el("optIn"),
-  reads: el("reads"),
-  publishes: el("publishes"),
-  avgCredits: el("avgCredits"),
-  avgRep: el("avgRep"),
-  remaining: el("remaining"),
+  networkActivity: el("networkActivity"),
 };
 
 function seededRng(seed) {
@@ -42,6 +46,8 @@ function simulate({
   starterCredits,
   freeRiderFraction,
   lowQualityFraction,
+  playerSharePropensity,
+  playerQualityBias,
   seed = 7,
 }) {
   const rand = seededRng(seed);
@@ -58,8 +64,14 @@ function simulate({
       freeRide,
       lowQuality,
       contrib: 0,
+      isPlayer: i === 0,
     };
   });
+
+  const player = clinics[0];
+  player.freeRide = false;
+  player.lowQuality = false;
+  player.sharePropensity = playerSharePropensity;
 
   const patients = Array.from({ length: nPatients }, (_, i) => `P${String(i).padStart(4, "0")}`);
   const histories = new Map();
@@ -79,6 +91,8 @@ function simulate({
   let poolBalance = 0;
   let totalReads = 0;
   let totalPublishes = 0;
+  let playerReads = 0;
+  let playerPublishes = 0;
 
   for (let r = 0; r < rounds; r += 1) {
     for (const clinic of clinics) {
@@ -97,6 +111,7 @@ function simulate({
           poolBalance += Math.floor(cfg.readCost * cfg.matchPoolRate);
           const list = histories.get(pid) || [];
           if (list.length) totalReads += 1;
+          if (clinic.isPlayer && list.length) playerReads += 1;
         }
       }
 
@@ -109,13 +124,14 @@ function simulate({
         clinic.credits += cfg.publishReward;
         clinic.contrib += 1;
 
-        const quality = clinic.lowQuality && rand() < 0.6
-          ? 0.1 + rand() * 0.4
-          : 0.6 + rand() * 0.4;
+        const quality = clinic.isPlayer
+          ? (rand() < playerQualityBias ? 0.7 + rand() * 0.3 : 0.2 + rand() * 0.4)
+          : (clinic.lowQuality && rand() < 0.6 ? 0.1 + rand() * 0.4 : 0.6 + rand() * 0.4);
 
         if (!histories.has(pid)) histories.set(pid, []);
         histories.get(pid).push({ quality, clinicId: clinic.id });
         totalPublishes += 1;
+        if (clinic.isPlayer) playerPublishes += 1;
 
         if (rand() < cfg.disputeProbability && quality < cfg.disputeThreshold) {
           const penalty = Math.min(cfg.slashAmount, clinic.credits);
@@ -148,6 +164,10 @@ function simulate({
   const avgRep = clinics.reduce((sum, c) => sum + c.reputation, 0) / clinics.length;
 
   return {
+    playerCredits: player.credits,
+    playerReads,
+    playerPublishes,
+    playerReputation: player.reputation,
     optInRate: optedIn / clinics.length,
     totalReads,
     totalPublishes,
@@ -158,12 +178,12 @@ function simulate({
 }
 
 function render(stats) {
+  output.yourCredits.textContent = stats.playerCredits.toFixed(1);
+  output.yourReads.textContent = stats.playerReads.toFixed(0);
+  output.yourPublishes.textContent = stats.playerPublishes.toFixed(0);
+  output.yourRep.textContent = stats.playerReputation.toFixed(2);
   output.optIn.textContent = `${stats.optInRate.toFixed(3)}`;
-  output.reads.textContent = stats.totalReads.toFixed(0);
-  output.publishes.textContent = stats.totalPublishes.toFixed(0);
-  output.avgCredits.textContent = stats.avgCredits.toFixed(1);
-  output.avgRep.textContent = stats.avgRep.toFixed(2);
-  output.remaining.textContent = stats.remainingClinics.toFixed(0);
+  output.networkActivity.textContent = `${stats.totalReads.toFixed(0)} reads / ${stats.totalPublishes.toFixed(0)} publishes`;
 }
 
 function run() {
@@ -174,6 +194,8 @@ function run() {
     starterCredits: Number(form.credits.value),
     freeRiderFraction: Number(form.freeRider.value) / 100,
     lowQualityFraction: Number(form.lowQuality.value) / 100,
+    playerSharePropensity: Number(form.shareProp.value) / 100,
+    playerQualityBias: Number(form.qualityBias.value) / 100,
   });
   render(stats);
 }
