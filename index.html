@@ -187,15 +187,11 @@
     }
     .points-meta strong { color: var(--ink); }
 
-    .demo-shell {
+    .demo-toolbar {
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 24px;
-      margin-bottom: 28px;
-    }
-    .demo-sidebar {
-      display: grid;
-      gap: 16px;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 18px;
+      margin-bottom: 22px;
     }
     .balance-card,
     .action-card,
@@ -245,11 +241,6 @@
     .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(20, 24, 28, 0.12); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    .rating-buttons {
-      display: grid;
-      gap: 8px;
-    }
-
     .activity-log {
       list-style: none;
       padding: 0;
@@ -266,7 +257,7 @@
       border: 1px solid #e2ddd2;
     }
 
-    .demo-card .tier-label {
+    .tier-label {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -285,6 +276,11 @@
       font-size: 12px;
       color: var(--muted);
       margin-top: 6px;
+    }
+
+    .doc-actions {
+      display: grid;
+      gap: 8px;
     }
 
     .note {
@@ -316,7 +312,7 @@
     }
 
     @media (max-width: 900px) {
-      header, .points, .split, .demo-shell { grid-template-columns: 1fr; }
+      header, .points, .split, .demo-toolbar { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -384,87 +380,26 @@
         <h2>Example Shared Patient Documents</h2>
         <p>Primary artefacts. Source-blind, anonymous, non-evaluative.</p>
       </div>
-      <div class="demo-shell">
-        <div class="demo-sidebar">
-          <div class="balance-card">
-            <div>Your clinic points</div>
-            <span id="pointsBalance">24</span>
-          </div>
-          <div class="action-card">
-            <h3>Share a record</h3>
-            <p>Sharing adds points. No clinic identity is exposed.</p>
-            <button class="btn" data-action="share-structured">Share structured history (+12 points)</button>
-            <button class="btn" data-action="share-detailed">Share detailed notes (+18 points)</button>
-          </div>
-          <div class="action-card">
-            <h3>Read a record</h3>
-            <p>Access is tiered. Spend points to unlock.</p>
-            <button class="btn" data-action="unlock-tier1" data-target="demoDoc">View structured history (6 points)</button>
-            <button class="btn" data-action="unlock-tier2" data-target="demoDoc">Unlock detailed notes (18 points)</button>
-          </div>
-          <div class="action-card">
-            <h3>Private case-fit marker</h3>
-            <p>Private to your clinic. Not shared, no scores.</p>
-            <div class="rating-buttons">
-              <button class="btn" data-action="rate" data-value="Fits current case">Fits current case</button>
-              <button class="btn" data-action="rate" data-value="Not a fit">Not a fit</button>
-              <button class="btn" data-action="rate" data-value="Unsure">Unsure</button>
-            </div>
-          </div>
-          <div class="log-card">
-            <h3>Activity</h3>
-            <ul class="activity-log" id="activityLog">
-              <li>Ready to share and unlock records.</li>
-            </ul>
-          </div>
+      <div class="demo-toolbar">
+        <div class="balance-card">
+          <div>Your clinic points</div>
+          <span id="pointsBalance">24</span>
         </div>
-        <article class="doc-card demo-card" id="demoDoc" data-tier1="locked" data-tier2="locked">
-          <div class="doc-header">
-            <div class="clinic">Live Demo Record</div>
-            <div class="pill">Source-blind</div>
-          </div>
-          <div class="summary">
-            <strong>Document Summary</strong>
-            <div>Body region: Lower limb</div>
-            <div>Condition category: Post-surgical rehabilitation</div>
-            <div>Treatment category: Exercise-based therapy</div>
-            <div>Duration covered: 8+ weeks</div>
-            <div>Documentation depth: High (includes clinician notes)</div>
-          </div>
-          <div class="locked" id="tier1Locked">
-            <strong>Tier 1 — Structured history locked</strong>
-            <div>Unlock structured history for 6 points.</div>
-          </div>
-          <div class="form" id="tier1Content" hidden>
-            <div class="tier-label"><span class="status-pill">Tier 1 unlocked</span> Structured history</div>
-            <div>Condition (taxonomy-based): ACL reconstruction rehab</div>
-            <div>Body region(s): Knee, hip</div>
-            <div>Treatment modalities (coded): THER-EX, MOB-MAN, EDU-PR</div>
-            <div>Progress markers: Strength +, ROM stable, gait improved</div>
-            <div>Imaging: Not recorded</div>
-            <div>Red flags: Not recorded</div>
-          </div>
-          <div class="locked" id="tier2Locked">
-            <strong>Tier 2 — Detailed notes locked</strong>
-            <div>Unlock detailed notes for 18 points.</div>
-          </div>
-          <div class="form" id="tier2Content" hidden>
-            <div class="tier-label"><span class="status-pill">Tier 2 unlocked</span> Detailed notes</div>
-            <div>Clinical notes: Available in system</div>
-            <div>Subjective observations: Available in system</div>
-            <div>Comments: Available in system</div>
-            <div class="locked-note">Demo does not display note contents.</div>
-          </div>
-          <div class="points-meta">
-            <div><strong>Sharing this record earned 12 points</strong></div>
-            <div>Structured history: 6 points</div>
-            <div>Detailed notes: 18 points</div>
-          </div>
-          <div class="note">Point costs vary over time based on contribution quality.</div>
-        </article>
+        <div class="action-card">
+          <h3>Share a record</h3>
+          <p>Sharing adds points. No clinic identity is exposed.</p>
+          <button class="btn" data-action="share-structured">Share structured history (+12 points)</button>
+          <button class="btn" data-action="share-detailed">Share detailed notes (+18 points)</button>
+        </div>
+      </div>
+      <div class="log-card">
+        <h3>Activity</h3>
+        <ul class="activity-log" id="activityLog">
+          <li>Browse summaries, then unlock tier 1 or tier 2.</li>
+        </ul>
       </div>
       <div class="artefacts">
-        <article class="doc-card">
+        <article class="doc-card" id="clinicA" data-tier1="locked" data-tier2="locked">
           <div class="doc-header">
             <div class="clinic">Clinic A</div>
             <div class="pill">Source-blind</div>
@@ -477,8 +412,16 @@
             <div>Duration covered: 8+ weeks</div>
             <div>Documentation depth: High (includes clinician notes)</div>
           </div>
-          <div class="form">
-            <strong>Standardised Patient History</strong>
+          <div class="doc-actions">
+            <button class="btn" data-action="unlock-tier1" data-target="clinicA">View structured history (6 points)</button>
+            <button class="btn" data-action="unlock-tier2" data-target="clinicA">Unlock detailed notes (18 points)</button>
+          </div>
+          <div class="locked" data-tier-lock="tier1">
+            <strong>Tier 1 — Structured history locked</strong>
+            <div>Unlock structured history for 6 points.</div>
+          </div>
+          <div class="form" data-tier-content="tier1" hidden>
+            <div class="tier-label"><span class="status-pill">Tier 1</span> Standardised patient history</div>
             <div>Condition (taxonomy-based): ACL reconstruction rehab</div>
             <div>Body region(s): Knee, hip</div>
             <div>Treatment modalities (coded): THER-EX, MOB-MAN, EDU-PR</div>
@@ -486,12 +429,16 @@
             <div>Imaging: Not recorded</div>
             <div>Red flags: Not recorded</div>
           </div>
-          <div class="locked">
-            <strong>Locked detailed notes</strong>
+          <div class="locked" data-tier-lock="tier2">
+            <strong>Tier 2 — Detailed notes locked</strong>
             <div>Unlock detailed notes for 18 points</div>
-            <div>Clinical notes: Locked</div>
-            <div>Subjective observations: Locked</div>
-            <div>Comments: Locked</div>
+          </div>
+          <div class="form" data-tier-content="tier2" hidden>
+            <div class="tier-label"><span class="status-pill">Tier 2</span> Detailed notes</div>
+            <div>Clinical notes: Available in system</div>
+            <div>Subjective observations: Available in system</div>
+            <div>Comments: Available in system</div>
+            <div class="locked-note">Demo does not display note contents.</div>
           </div>
           <div class="points-meta">
             <div><strong>Sharing this record earned 12 points</strong></div>
@@ -501,7 +448,7 @@
           <div class="note">Point costs vary over time based on contribution quality.</div>
         </article>
 
-        <article class="doc-card">
+        <article class="doc-card" id="clinicB" data-tier1="locked" data-tier2="locked">
           <div class="doc-header">
             <div class="clinic">Clinic B</div>
             <div class="pill">Source-blind</div>
@@ -514,8 +461,16 @@
             <div>Duration covered: 4–6 weeks</div>
             <div>Documentation depth: Medium (structured form only)</div>
           </div>
-          <div class="form">
-            <strong>Standardised Patient History</strong>
+          <div class="doc-actions">
+            <button class="btn" data-action="unlock-tier1" data-target="clinicB">View structured history (6 points)</button>
+            <button class="btn" data-action="unlock-tier2" data-target="clinicB">Unlock detailed notes (18 points)</button>
+          </div>
+          <div class="locked" data-tier-lock="tier1">
+            <strong>Tier 1 — Structured history locked</strong>
+            <div>Unlock structured history for 6 points.</div>
+          </div>
+          <div class="form" data-tier-content="tier1" hidden>
+            <div class="tier-label"><span class="status-pill">Tier 1</span> Standardised patient history</div>
             <div>Condition (taxonomy-based): Non-specific low back pain</div>
             <div>Body region(s): Lumbar spine</div>
             <div>Treatment modalities (coded): MOB-MAN, EDU-PR, EXE-CORE</div>
@@ -523,12 +478,16 @@
             <div>Imaging: Not recorded</div>
             <div>Red flags: Not recorded</div>
           </div>
-          <div class="locked">
-            <strong>Locked detailed notes</strong>
+          <div class="locked" data-tier-lock="tier2">
+            <strong>Tier 2 — Detailed notes locked</strong>
             <div>Unlock detailed notes for 18 points</div>
-            <div>Clinical notes: Locked</div>
-            <div>Subjective observations: Locked</div>
-            <div>Comments: Locked</div>
+          </div>
+          <div class="form" data-tier-content="tier2" hidden>
+            <div class="tier-label"><span class="status-pill">Tier 2</span> Detailed notes</div>
+            <div>Clinical notes: Available in system</div>
+            <div>Subjective observations: Available in system</div>
+            <div>Comments: Available in system</div>
+            <div class="locked-note">Demo does not display note contents.</div>
           </div>
           <div class="points-meta">
             <div><strong>Sharing this record earned 12 points</strong></div>
@@ -538,7 +497,7 @@
           <div class="note">Point costs vary over time based on contribution quality.</div>
         </article>
 
-        <article class="doc-card">
+        <article class="doc-card" id="clinicC" data-tier1="locked" data-tier2="locked">
           <div class="doc-header">
             <div class="clinic">Clinic C</div>
             <div class="pill">Source-blind</div>
@@ -551,8 +510,16 @@
             <div>Duration covered: 2–3 weeks</div>
             <div>Documentation depth: Medium (includes progress markers)</div>
           </div>
-          <div class="form">
-            <strong>Standardised Patient History</strong>
+          <div class="doc-actions">
+            <button class="btn" data-action="unlock-tier1" data-target="clinicC">View structured history (6 points)</button>
+            <button class="btn" data-action="unlock-tier2" data-target="clinicC">Unlock detailed notes (18 points)</button>
+          </div>
+          <div class="locked" data-tier-lock="tier1">
+            <strong>Tier 1 — Structured history locked</strong>
+            <div>Unlock structured history for 6 points.</div>
+          </div>
+          <div class="form" data-tier-content="tier1" hidden>
+            <div class="tier-label"><span class="status-pill">Tier 1</span> Standardised patient history</div>
             <div>Condition (taxonomy-based): Lateral elbow tendinopathy</div>
             <div>Body region(s): Elbow, forearm</div>
             <div>Treatment modalities (coded): LOAD-PROG, EDU-PR, EXE-ISO</div>
@@ -560,12 +527,16 @@
             <div>Imaging: Not recorded</div>
             <div>Red flags: Not recorded</div>
           </div>
-          <div class="locked">
-            <strong>Locked detailed notes</strong>
+          <div class="locked" data-tier-lock="tier2">
+            <strong>Tier 2 — Detailed notes locked</strong>
             <div>Unlock detailed notes for 18 points</div>
-            <div>Clinical notes: Locked</div>
-            <div>Subjective observations: Locked</div>
-            <div>Comments: Locked</div>
+          </div>
+          <div class="form" data-tier-content="tier2" hidden>
+            <div class="tier-label"><span class="status-pill">Tier 2</span> Detailed notes</div>
+            <div>Clinical notes: Available in system</div>
+            <div>Subjective observations: Available in system</div>
+            <div>Comments: Available in system</div>
+            <div class="locked-note">Demo does not display note contents.</div>
           </div>
           <div class="points-meta">
             <div><strong>Sharing this record earned 12 points</strong></div>
@@ -618,11 +589,6 @@
   <script>
     const balanceEl = document.getElementById("pointsBalance");
     const activityLog = document.getElementById("activityLog");
-    const demoDoc = document.getElementById("demoDoc");
-    const tier1Locked = document.getElementById("tier1Locked");
-    const tier1Content = document.getElementById("tier1Content");
-    const tier2Locked = document.getElementById("tier2Locked");
-    const tier2Content = document.getElementById("tier2Content");
 
     let points = 24;
 
@@ -649,27 +615,31 @@
       return true;
     };
 
-    const unlockTier1 = () => {
-      if (demoDoc.dataset.tier1 === "unlocked") {
-        logActivity("Structured history already unlocked.");
+    const unlockTier1 = (card) => {
+      if (card.dataset.tier1 === "unlocked") {
+        logActivity("Structured history already unlocked for this record.");
         return;
       }
       if (!spendPoints(6)) return;
-      demoDoc.dataset.tier1 = "unlocked";
-      tier1Locked.hidden = true;
-      tier1Content.hidden = false;
+      card.dataset.tier1 = "unlocked";
+      const lock = card.querySelector('[data-tier-lock="tier1"]');
+      const content = card.querySelector('[data-tier-content="tier1"]');
+      if (lock) lock.hidden = true;
+      if (content) content.hidden = false;
       logActivity("Structured history unlocked (6 points).");
     };
 
-    const unlockTier2 = () => {
-      if (demoDoc.dataset.tier2 === "unlocked") {
-        logActivity("Detailed notes already unlocked.");
+    const unlockTier2 = (card) => {
+      if (card.dataset.tier2 === "unlocked") {
+        logActivity("Detailed notes already unlocked for this record.");
         return;
       }
       if (!spendPoints(18)) return;
-      demoDoc.dataset.tier2 = "unlocked";
-      tier2Locked.hidden = true;
-      tier2Content.hidden = false;
+      card.dataset.tier2 = "unlocked";
+      const lock = card.querySelector('[data-tier-lock="tier2"]');
+      const content = card.querySelector('[data-tier-content="tier2"]');
+      if (lock) lock.hidden = true;
+      if (content) content.hidden = false;
       logActivity("Detailed notes unlocked (18 points).");
     };
 
@@ -687,14 +657,12 @@
           logActivity("Shared detailed notes (+18 points).");
         }
         if (action === "unlock-tier1") {
-          unlockTier1();
+          const card = document.getElementById(btn.dataset.target);
+          if (card) unlockTier1(card);
         }
         if (action === "unlock-tier2") {
-          unlockTier2();
-        }
-        if (action === "rate") {
-          const value = btn.dataset.value;
-          logActivity(`Private case-fit marker saved: ${value}.`);
+          const card = document.getElementById(btn.dataset.target);
+          if (card) unlockTier2(card);
         }
       });
     });
