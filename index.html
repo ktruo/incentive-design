@@ -187,6 +187,106 @@
     }
     .points-meta strong { color: var(--ink); }
 
+    .demo-shell {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    .demo-sidebar {
+      display: grid;
+      gap: 16px;
+    }
+    .balance-card,
+    .action-card,
+    .log-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .balance-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+    .balance-card span {
+      font-size: 22px;
+      color: var(--accent);
+    }
+    .action-card h3,
+    .log-card h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .action-card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .btn {
+      width: 100%;
+      border: 1px solid #c9cfc7;
+      background: #f8f6f1;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn + .btn { margin-top: 8px; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(20, 24, 28, 0.12); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .rating-buttons {
+      display: grid;
+      gap: 8px;
+    }
+
+    .activity-log {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .activity-log li {
+      padding: 8px 10px;
+      background: #f4f3f0;
+      border-radius: 10px;
+      border: 1px solid #e2ddd2;
+    }
+
+    .demo-card .tier-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #d7e4df;
+      background: #eef3f1;
+      color: var(--accent);
+    }
+    .locked-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
     .note {
       font-size: 12px;
       color: var(--muted);
@@ -216,7 +316,7 @@
     }
 
     @media (max-width: 900px) {
-      header, .points, .split { grid-template-columns: 1fr; }
+      header, .points, .split, .demo-shell { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -283,6 +383,85 @@
       <div class="section-title">
         <h2>Example Shared Patient Documents</h2>
         <p>Primary artefacts. Source-blind, anonymous, non-evaluative.</p>
+      </div>
+      <div class="demo-shell">
+        <div class="demo-sidebar">
+          <div class="balance-card">
+            <div>Your clinic points</div>
+            <span id="pointsBalance">24</span>
+          </div>
+          <div class="action-card">
+            <h3>Share a record</h3>
+            <p>Sharing adds points. No clinic identity is exposed.</p>
+            <button class="btn" data-action="share-structured">Share structured history (+12 points)</button>
+            <button class="btn" data-action="share-detailed">Share detailed notes (+18 points)</button>
+          </div>
+          <div class="action-card">
+            <h3>Read a record</h3>
+            <p>Access is tiered. Spend points to unlock.</p>
+            <button class="btn" data-action="unlock-tier1" data-target="demoDoc">View structured history (6 points)</button>
+            <button class="btn" data-action="unlock-tier2" data-target="demoDoc">Unlock detailed notes (18 points)</button>
+          </div>
+          <div class="action-card">
+            <h3>Private case-fit marker</h3>
+            <p>Private to your clinic. Not shared, no scores.</p>
+            <div class="rating-buttons">
+              <button class="btn" data-action="rate" data-value="Fits current case">Fits current case</button>
+              <button class="btn" data-action="rate" data-value="Not a fit">Not a fit</button>
+              <button class="btn" data-action="rate" data-value="Unsure">Unsure</button>
+            </div>
+          </div>
+          <div class="log-card">
+            <h3>Activity</h3>
+            <ul class="activity-log" id="activityLog">
+              <li>Ready to share and unlock records.</li>
+            </ul>
+          </div>
+        </div>
+        <article class="doc-card demo-card" id="demoDoc" data-tier1="locked" data-tier2="locked">
+          <div class="doc-header">
+            <div class="clinic">Live Demo Record</div>
+            <div class="pill">Source-blind</div>
+          </div>
+          <div class="summary">
+            <strong>Document Summary</strong>
+            <div>Body region: Lower limb</div>
+            <div>Condition category: Post-surgical rehabilitation</div>
+            <div>Treatment category: Exercise-based therapy</div>
+            <div>Duration covered: 8+ weeks</div>
+            <div>Documentation depth: High (includes clinician notes)</div>
+          </div>
+          <div class="locked" id="tier1Locked">
+            <strong>Tier 1 — Structured history locked</strong>
+            <div>Unlock structured history for 6 points.</div>
+          </div>
+          <div class="form" id="tier1Content" hidden>
+            <div class="tier-label"><span class="status-pill">Tier 1 unlocked</span> Structured history</div>
+            <div>Condition (taxonomy-based): ACL reconstruction rehab</div>
+            <div>Body region(s): Knee, hip</div>
+            <div>Treatment modalities (coded): THER-EX, MOB-MAN, EDU-PR</div>
+            <div>Progress markers: Strength +, ROM stable, gait improved</div>
+            <div>Imaging: Not recorded</div>
+            <div>Red flags: Not recorded</div>
+          </div>
+          <div class="locked" id="tier2Locked">
+            <strong>Tier 2 — Detailed notes locked</strong>
+            <div>Unlock detailed notes for 18 points.</div>
+          </div>
+          <div class="form" id="tier2Content" hidden>
+            <div class="tier-label"><span class="status-pill">Tier 2 unlocked</span> Detailed notes</div>
+            <div>Clinical notes: Available in system</div>
+            <div>Subjective observations: Available in system</div>
+            <div>Comments: Available in system</div>
+            <div class="locked-note">Demo does not display note contents.</div>
+          </div>
+          <div class="points-meta">
+            <div><strong>Sharing this record earned 12 points</strong></div>
+            <div>Structured history: 6 points</div>
+            <div>Detailed notes: 18 points</div>
+          </div>
+          <div class="note">Point costs vary over time based on contribution quality.</div>
+        </article>
       </div>
       <div class="artefacts">
         <article class="doc-card">
@@ -436,5 +615,91 @@
       Product demo preview — designed for independent physiotherapy clinics in the Kinetic ecosystem.
     </footer>
   </div>
+  <script>
+    const balanceEl = document.getElementById("pointsBalance");
+    const activityLog = document.getElementById("activityLog");
+    const demoDoc = document.getElementById("demoDoc");
+    const tier1Locked = document.getElementById("tier1Locked");
+    const tier1Content = document.getElementById("tier1Content");
+    const tier2Locked = document.getElementById("tier2Locked");
+    const tier2Content = document.getElementById("tier2Content");
+
+    let points = 24;
+
+    const logActivity = (text) => {
+      const item = document.createElement("li");
+      item.textContent = text;
+      activityLog.prepend(item);
+      if (activityLog.children.length > 5) {
+        activityLog.removeChild(activityLog.lastElementChild);
+      }
+    };
+
+    const updateBalance = () => {
+      balanceEl.textContent = points;
+    };
+
+    const spendPoints = (cost) => {
+      if (points < cost) {
+        logActivity(`Not enough points. Need ${cost}, you have ${points}.`);
+        return false;
+      }
+      points -= cost;
+      updateBalance();
+      return true;
+    };
+
+    const unlockTier1 = () => {
+      if (demoDoc.dataset.tier1 === "unlocked") {
+        logActivity("Structured history already unlocked.");
+        return;
+      }
+      if (!spendPoints(6)) return;
+      demoDoc.dataset.tier1 = "unlocked";
+      tier1Locked.hidden = true;
+      tier1Content.hidden = false;
+      logActivity("Structured history unlocked (6 points).");
+    };
+
+    const unlockTier2 = () => {
+      if (demoDoc.dataset.tier2 === "unlocked") {
+        logActivity("Detailed notes already unlocked.");
+        return;
+      }
+      if (!spendPoints(18)) return;
+      demoDoc.dataset.tier2 = "unlocked";
+      tier2Locked.hidden = true;
+      tier2Content.hidden = false;
+      logActivity("Detailed notes unlocked (18 points).");
+    };
+
+    document.querySelectorAll("[data-action]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const action = btn.dataset.action;
+        if (action === "share-structured") {
+          points += 12;
+          updateBalance();
+          logActivity("Shared structured history (+12 points).");
+        }
+        if (action === "share-detailed") {
+          points += 18;
+          updateBalance();
+          logActivity("Shared detailed notes (+18 points).");
+        }
+        if (action === "unlock-tier1") {
+          unlockTier1();
+        }
+        if (action === "unlock-tier2") {
+          unlockTier2();
+        }
+        if (action === "rate") {
+          const value = btn.dataset.value;
+          logActivity(`Private case-fit marker saved: ${value}.`);
+        }
+      });
+    });
+
+    updateBalance();
+  </script>
 </body>
 </html>
