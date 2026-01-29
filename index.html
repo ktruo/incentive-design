@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kinetic Incentive Design Prototype</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div class="hero__meta">Project 1 · Incentive Design Under Adversarial Conditions</div>
+        <h1>Make sharing patient history the selfish choice.</h1>
+        <p class="hero__lead">
+          Kinetic serves 1,800 independent physiotherapy clinics. They want shared patient history, but
+          incentives are misaligned. This prototype shows a system where credits, pooling, and dispute
+          slashing push rational clinics to opt in and contribute.
+        </p>
+        <div class="hero__pill-row">
+          <div class="pill">Primary fear: patient switching</div>
+          <div class="pill">Secondary fear: peer judgment</div>
+        </div>
+      </header>
+
+      <section class="panel">
+        <div class="panel__title">Simulation Controls</div>
+        <div class="grid">
+          <label>
+            Clinics
+            <input id="clinics" type="number" min="50" max="1000" value="200" />
+          </label>
+          <label>
+            Patients
+            <input id="patients" type="number" min="100" max="2000" value="400" />
+          </label>
+          <label>
+            Rounds
+            <input id="rounds" type="number" min="10" max="100" value="45" />
+          </label>
+          <label>
+            Starter credits
+            <input id="credits" type="number" min="5" max="30" value="10" />
+          </label>
+          <label>
+            Free rider %
+            <input id="freeRider" type="number" min="0" max="60" value="18" />
+          </label>
+          <label>
+            Low quality %
+            <input id="lowQuality" type="number" min="0" max="40" value="10" />
+          </label>
+        </div>
+        <div class="actions">
+          <button id="runBtn">Run simulation</button>
+          <button id="resetBtn" class="ghost">Reset defaults</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel__title">Results</div>
+        <div class="results" id="results">
+          <div class="metric">
+            <div class="metric__label">Opt-in rate</div>
+            <div class="metric__value" id="optIn">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Total reads</div>
+            <div class="metric__value" id="reads">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Total publishes</div>
+            <div class="metric__value" id="publishes">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Avg credits</div>
+            <div class="metric__value" id="avgCredits">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Avg reputation</div>
+            <div class="metric__value" id="avgRep">--</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Remaining clinics</div>
+            <div class="metric__value" id="remaining">--</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel__title">Mechanics</div>
+        <div class="mechanics">
+          <div>
+            <h3>Credit reciprocity</h3>
+            <p>Reading costs credits. Publishing earns credits and restores access.</p>
+          </div>
+          <div>
+            <h3>Shared match pool</h3>
+            <p>Part of read spend goes to a pool paid to contributors each round.</p>
+          </div>
+          <div>
+            <h3>Privacy-first</h3>
+            <p>Authorship is redacted to avoid reputational fear.</p>
+          </div>
+          <div>
+            <h3>Quality enforcement</h3>
+            <p>Low-quality entries can trigger slashing and reputation loss.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Prototype is a simplified behavioral model for incentive design testing.
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
