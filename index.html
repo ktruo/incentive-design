@@ -25,6 +25,13 @@
 
       <section class="panel">
         <div class="panel__title">Your Clinic Controls</div>
+        <div class="toggle">
+          <label class="toggle__label">
+            <input id="manualMode" type="checkbox" />
+            Manual mode (step each round)
+          </label>
+          <div class="toggle__hint">When enabled, you choose read/publish per round.</div>
+        </div>
         <div class="grid">
           <label>
             Your starting credits
@@ -60,8 +67,23 @@
           </label>
         </div>
         <div class="actions">
-          <button id="runBtn">Run your clinic</button>
+          <button id="runBtn">Run auto simulation</button>
           <button id="resetBtn" class="ghost">Reset defaults</button>
+        </div>
+      </section>
+
+      <section class="panel" id="manualPanel">
+        <div class="panel__title">Manual Round</div>
+        <div class="manual">
+          <div class="manual__status" id="manualStatus">Round 0 of 0</div>
+          <div class="manual__actions">
+            <button id="toggleRead" class="ghost">Read this round</button>
+            <button id="togglePublish" class="ghost">Publish this round</button>
+            <button id="advanceRound">Advance round</button>
+          </div>
+          <div class="manual__hint" id="manualHint">
+            Select actions for this round, then advance.
+          </div>
         </div>
       </section>
 
