@@ -226,6 +226,44 @@
       color: var(--muted);
       font-size: 12px;
     }
+    .share-form {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      background: #f7f4ef;
+      border: 1px dashed #d9d0c4;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .share-form label {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .share-form input[type="text"],
+    .share-form textarea {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #c9cfc7;
+      padding: 8px 10px;
+      font-size: 12px;
+      background: #ffffff;
+      color: var(--ink);
+      font-family: inherit;
+    }
+    .share-form textarea { min-height: 70px; resize: vertical; }
+    .share-form input[type="file"] {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .share-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .share-actions .btn { margin: 0; }
     .btn {
       width: 100%;
       border: 1px solid #c9cfc7;
@@ -389,8 +427,40 @@
         <div class="action-card">
           <h3>Share a record</h3>
           <p>Sharing adds points. No clinic identity is exposed.</p>
-          <button class="btn" data-action="share-structured">Share structured history (+12 points)</button>
-          <button class="btn" data-action="share-detailed">Share detailed notes (+18 points)</button>
+          <button class="btn" data-action="open-share" data-share="structured">Share structured history (+12 points)</button>
+          <button class="btn" data-action="open-share" data-share="detailed">Share detailed notes (+18 points)</button>
+          <div class="share-form" id="shareFormStructured" hidden>
+            <strong>Structured history upload</strong>
+            <label>Record label
+              <input type="text" id="structuredLabel" placeholder="e.g., Knee rehab — 6 week update" />
+            </label>
+            <label>Structured fields (optional)
+              <textarea id="structuredFields" placeholder="Condition, body region, modalities, progress markers…"></textarea>
+            </label>
+            <label>Attach file (optional)
+              <input type="file" id="structuredFile" />
+            </label>
+            <div class="share-actions">
+              <button class="btn" data-action="submit-share" data-share="structured">Submit & earn +12</button>
+              <button class="btn" data-action="close-share" data-share="structured">Cancel</button>
+            </div>
+          </div>
+          <div class="share-form" id="shareFormDetailed" hidden>
+            <strong>Detailed notes upload</strong>
+            <label>Record label
+              <input type="text" id="detailedLabel" placeholder="e.g., Low back pain — 4th visit notes" />
+            </label>
+            <label>Detailed notes (optional)
+              <textarea id="detailedNotes" placeholder="Clinical notes, subjective observations, plan adjustments…"></textarea>
+            </label>
+            <label>Attach file (optional)
+              <input type="file" id="detailedFile" />
+            </label>
+            <div class="share-actions">
+              <button class="btn" data-action="submit-share" data-share="detailed">Submit & earn +18</button>
+              <button class="btn" data-action="close-share" data-share="detailed">Cancel</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="log-card">
@@ -745,15 +815,32 @@
     document.querySelectorAll("[data-action]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const action = btn.dataset.action;
-        if (action === "share-structured") {
-          points += 12;
-          updateBalance();
-          logActivity("Shared structured history (+12 points).");
+        if (action === "open-share") {
+          const type = btn.dataset.share;
+          const form = document.getElementById(type === "structured" ? "shareFormStructured" : "shareFormDetailed");
+          if (form) form.hidden = false;
         }
-        if (action === "share-detailed") {
-          points += 18;
-          updateBalance();
-          logActivity("Shared detailed notes (+18 points).");
+        if (action === "close-share") {
+          const type = btn.dataset.share;
+          const form = document.getElementById(type === "structured" ? "shareFormStructured" : "shareFormDetailed");
+          if (form) form.hidden = true;
+        }
+        if (action === "submit-share") {
+          const type = btn.dataset.share;
+          if (type === "structured") {
+            points += 12;
+            updateBalance();
+            logActivity("Structured history submitted (+12 points).");
+            const form = document.getElementById("shareFormStructured");
+            if (form) form.hidden = true;
+          }
+          if (type === "detailed") {
+            points += 18;
+            updateBalance();
+            logActivity("Detailed notes submitted (+18 points).");
+            const form = document.getElementById("shareFormDetailed");
+            if (form) form.hidden = true;
+          }
         }
         if (action === "unlock-tier1") {
           const card = document.getElementById(btn.dataset.target);
